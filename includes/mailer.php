@@ -21,6 +21,34 @@ function configure_smtp_diagnostics(PHPMailer\PHPMailer\PHPMailer $mail): void
     };
 }
 
+function render_account_email(array $values): string
+{
+    $template = @file_get_contents(__DIR__ . '/../email_template.html');
+    if ($template === false) {
+        throw new RuntimeException('قالب البريد غير موجود.');
+    }
+    $defaults = [
+        'subject' => 'Noor Handmade',
+        'preheader' => '',
+        'logo_url' => app_base_url() . '/images/logo.jpeg',
+        'eyebrow' => 'NOOR HANDMADE',
+        'title' => '',
+        'full_name' => '',
+        'message' => '',
+        'action_url' => app_base_url(),
+        'action_label' => 'فتح الرابط',
+        'expiry_note' => '',
+        'security_note' => '',
+        'year' => date('Y'),
+    ];
+    $values = array_merge($defaults, $values);
+    $replace = [];
+    foreach ($values as $key => $value) {
+        $replace['{{' . $key . '}}'] = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    }
+    return strtr($template, $replace);
+}
+
 function mail_failure_diagnostic(string $context, Throwable $exception): string
 {
     $diagnosticId = strtoupper(bin2hex(random_bytes(4)));
@@ -96,15 +124,18 @@ function send_verification_email(string $email, string $fullName, string $token)
     $verificationLink = app_base_url() . '/verify.php?token=' . rawurlencode($token);
     $mail->isHTML(true);
     $mail->Subject = 'خطوة واحدة لتفعيل حسابك في Noor Handmade';
-    $template = @file_get_contents(__DIR__ . '/../email_template.html');
-    if ($template === false) {
-        throw new RuntimeException('قالب رسالة التفعيل غير موجود.');
-    }
-    $mail->Body = str_replace(
-        ['{{full_name}}', '{{verification_link}}'],
-        [htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8'), htmlspecialchars($verificationLink, ENT_QUOTES, 'UTF-8')],
-        $template
-    );
+    $mail->Body = render_account_email([
+        'subject' => $mail->Subject,
+        'preheader' => 'فعّل حسابك وابدأ رحلتك مع Noor Handmade.',
+        'eyebrow' => 'تفعيل الحساب',
+        'title' => 'باقي خطوة واحدة ونورتنا',
+        'full_name' => $fullName,
+        'message' => 'سعداء بانضمامك إلينا. اضغط على الزر لتأكيد بريدك وتفعيل حسابك، وبعدها تقدر تستكشف منتجاتنا وتطلب القطع التي تحبها.',
+        'action_url' => $verificationLink,
+        'action_label' => 'تفعيل حسابي الآن',
+        'expiry_note' => 'رابط التفعيل صالح لمدة 24 ساعة فقط.',
+        'security_note' => 'إذا لم تنشئ هذا الحساب، يمكنك تجاهل الرسالة بأمان.',
+    ]);
     $mail->AltBody = "مرحبًا {$fullName}، فعّل حسابك من الرابط التالي: {$verificationLink}";
     $mail->send();
 }
@@ -137,9 +168,18 @@ function send_password_reset_email(string $email, string $fullName, string $toke
     $resetLink = app_base_url() . '/reset_password.php?token=' . rawurlencode($token);
     $mail->isHTML(true);
     $mail->Subject = 'استعادة كلمة المرور - Noor Handmade';
-    $safeName = htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8');
-    $safeLink = htmlspecialchars($resetLink, ENT_QUOTES, 'UTF-8');
-    $mail->Body = "<div dir=\"rtl\" style=\"font-family:Arial,sans-serif\"><h2>مرحبًا {$safeName}</h2><p>استخدم الرابط التالي لتعيين كلمة مرور جديدة. الرابط صالح لمدة ساعة واحدة.</p><p><a href=\"{$safeLink}\">تعيين كلمة مرور جديدة</a></p><p>إذا لم تطلب ذلك، تجاهل الرسالة.</p></div>";
+    $mail->Body = render_account_email([
+        'subject' => $mail->Subject,
+        'preheader' => 'رابط آمن لتعيين كلمة مرور جديدة لحسابك.',
+        'eyebrow' => 'أمان حسابك',
+        'title' => 'تعيين كلمة مرور جديدة',
+        'full_name' => $fullName,
+        'message' => 'وصلنا طلب لتغيير كلمة مرور حسابك. اضغط على الزر التالي واختر كلمة مرور قوية وجديدة.',
+        'action_url' => $resetLink,
+        'action_label' => 'تعيين كلمة مرور جديدة',
+        'expiry_note' => 'رابط الاستعادة صالح لمدة ساعة واحدة فقط ويُستخدم مرة واحدة.',
+        'security_note' => 'إذا لم تطلب تغيير كلمة المرور، تجاهل الرسالة ولن يتغير شيء في حسابك.',
+    ]);
     $mail->AltBody = "مرحبًا {$fullName}، استعد كلمة المرور خلال ساعة من الرابط: {$resetLink}";
     $mail->send();
 }

@@ -39,20 +39,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'إعادة إرسال رابط التفعيل | Noor Handmade';
+$page_stylesheets = ['css/account-flow.css?v=1'];
 require_once __DIR__ . '/includes/header.php';
 ?>
-<div style="height: 90px"></div>
-<main class="container py-5" style="max-width: 620px">
-    <div class="card border-0 shadow-sm p-4">
-        <h1 class="h3 mb-3">إعادة إرسال رابط التفعيل</h1>
-        <?php foreach ($errors as $error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endforeach; ?>
-        <?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
-        <form method="post">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
-            <label class="form-label" for="email">البريد الإلكتروني</label>
-            <input class="form-control mb-3" type="email" id="email" name="email" required>
-            <button class="btn btn-primary" type="submit">إرسال رابط جديد</button>
-        </form>
+<main class="account-flow-page">
+    <div class="container">
+        <section class="account-flow-shell">
+            <div class="row g-0">
+                <div class="col-lg-5">
+                    <div class="account-flow-brand">
+                        <a href="index.php"><img src="images/logo.jpeg" alt="شعار Noor Handmade"></a>
+                        <h2>Noor Handmade</h2>
+                        <p>خطوة صغيرة تفصلك عن تفعيل حسابك والدخول لعالم المنتجات اليدوية المميزة.</p>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="account-flow-content">
+                        <span class="account-flow-icon"><i class="fa-solid fa-envelope-circle-check"></i></span>
+                        <span class="account-flow-kicker">تفعيل الحساب</span>
+                        <h1 class="account-flow-title">لم يصلك رابط التفعيل؟</h1>
+                        <p class="account-flow-copy">أدخل بريدك وسنرسل رابطًا جديدًا صالحًا لمدة 24 ساعة. تأكد أيضًا من مجلد الرسائل غير المرغوب فيها.</p>
+
+                        <?php foreach ($errors as $error): ?>
+                            <div class="alert alert-danger account-flow-alert"><i class="fa-solid fa-circle-exclamation ms-2"></i><?= htmlspecialchars($error) ?></div>
+                        <?php endforeach; ?>
+                        <?php if ($success): ?>
+                            <div class="alert alert-success account-flow-alert"><i class="fa-solid fa-circle-check ms-2"></i><?= htmlspecialchars($success) ?></div>
+                        <?php endif; ?>
+
+                        <form method="post">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+                            <div class="mb-4">
+                                <label class="form-label" for="email">البريد الإلكتروني</label>
+                                <div class="account-input-wrap">
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <input class="form-control" type="email" id="email" name="email" autocomplete="email" value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>" placeholder="name@example.com" required>
+                                </div>
+                            </div>
+                            <div class="d-grid"><button class="btn account-flow-submit" type="submit">إرسال رابط جديد <i class="fa-solid fa-paper-plane me-2"></i></button></div>
+                        </form>
+                        <a class="account-flow-back" href="login.php"><i class="fa-solid fa-arrow-right"></i> العودة لتسجيل الدخول</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </main>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

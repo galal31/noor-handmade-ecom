@@ -39,6 +39,9 @@ $cart_csrf_token = get_or_create_csrf_token('cart_csrf_token');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=El+Messiri:wght@600;700&display=swap"
         rel="stylesheet">
+    <?php foreach (($page_stylesheets ?? []) as $stylesheet): ?>
+        <link rel="stylesheet" href="<?= htmlspecialchars($stylesheet, ENT_QUOTES, 'UTF-8') ?>">
+    <?php endforeach; ?>
 
     <style>
         :root {

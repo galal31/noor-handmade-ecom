@@ -88,6 +88,221 @@ body {
 
 .footer {
     border-top: 1px solid #eee;
+    }
+
+/* Account recovery and verification */
+.account-flow-page {
+    position: relative;
+    isolation: isolate;
+    padding: 3.5rem 0 5rem;
+}
+
+.account-flow-page::before,
+.account-flow-page::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.account-flow-page::before {
+    width: 280px;
+    height: 280px;
+    top: 2rem;
+    right: -110px;
+    background: rgba(160, 82, 45, 0.09);
+}
+
+.account-flow-page::after {
+    width: 220px;
+    height: 220px;
+    bottom: 2rem;
+    left: -90px;
+    background: rgba(210, 180, 140, 0.18);
+}
+
+.account-flow-shell {
+    max-width: 980px;
+    margin-inline: auto;
+    overflow: hidden;
+    border: 1px solid rgba(160, 82, 45, 0.12);
+    border-radius: 28px;
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(74, 48, 34, 0.12);
+}
+
+.account-flow-brand {
+    min-height: 100%;
+    padding: 3.5rem 2.5rem;
+    background: linear-gradient(145deg, #8b4513 0%, #a0522d 58%, #b86f48 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.account-flow-brand img {
+    width: 118px;
+    height: 118px;
+    object-fit: cover;
+    border: 5px solid rgba(255, 255, 255, 0.85);
+    border-radius: 26px;
+    box-shadow: 0 14px 35px rgba(45, 22, 10, 0.28);
+}
+
+.account-flow-brand h2 {
+    margin: 1.5rem 0 0.65rem;
+    font-weight: 800;
+}
+
+.account-flow-brand p {
+    max-width: 300px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.84);
+    line-height: 1.9;
+}
+
+.account-flow-content {
+    padding: 3.75rem 4rem;
+}
+
+.account-flow-icon {
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background: #f8ece4;
+    color: var(--primary-color);
+    font-size: 1.55rem;
+}
+
+.account-flow-kicker {
+    display: block;
+    margin-top: 1.3rem;
+    color: var(--primary-color);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.account-flow-title {
+    margin: 0.55rem 0 0.75rem;
+    color: #34261f;
+    font-size: clamp(1.75rem, 3vw, 2.35rem);
+    font-weight: 800;
+}
+
+.account-flow-copy {
+    margin-bottom: 1.8rem;
+    color: #75665e;
+    line-height: 1.9;
+}
+
+.account-flow-content .form-label {
+    color: #49372e;
+    font-weight: 700;
+}
+
+.account-input-wrap {
+    position: relative;
+}
+
+.account-input-wrap > i {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    z-index: 2;
+    color: #a99387;
+    transform: translateY(-50%);
+}
+
+.account-flow-content .form-control {
+    min-height: 54px;
+    padding-inline: 3rem 1rem;
+    border: 1px solid #e7ddd7;
+    border-radius: 14px;
+    background: #fffdfb;
+}
+
+.account-flow-content .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(160, 82, 45, 0.13);
+}
+
+.account-password-toggle {
+    position: absolute;
+    top: 50%;
+    left: 0.75rem;
+    z-index: 3;
+    border: 0;
+    background: transparent;
+    color: #7f6d63;
+    transform: translateY(-50%);
+}
+
+.account-flow-submit {
+    min-height: 54px;
+    border: 0;
+    border-radius: 14px;
+    background: var(--primary-color);
+    color: #fff;
+    font-weight: 800;
+    box-shadow: 0 12px 24px rgba(160, 82, 45, 0.2);
+    transition: 0.2s ease;
+}
+
+.account-flow-submit:hover {
+    background: #8b4513;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.account-flow-back {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 1.5rem;
+    color: #6f5c52;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.account-flow-back:hover {
+    color: var(--primary-color);
+}
+
+.account-flow-alert {
+    border: 0;
+    border-radius: 14px;
+    line-height: 1.75;
+}
+
+.password-hint {
+    display: flex;
+    gap: 0.55rem;
+    align-items: center;
+    margin-top: 0.65rem;
+    color: #89776d;
+    font-size: 0.84rem;
+}
+
+@media (max-width: 991.98px) {
+    .account-flow-page { padding: 2rem 0 3.5rem; }
+    .account-flow-brand { padding: 2.25rem 1.5rem; }
+    .account-flow-brand img { width: 88px; height: 88px; border-radius: 20px; }
+    .account-flow-brand h2 { margin-top: 1rem; }
+    .account-flow-content { padding: 2.5rem 2rem; }
+}
+
+@media (max-width: 575.98px) {
+    .account-flow-shell { border-radius: 22px; }
+    .account-flow-content { padding: 2rem 1.25rem; }
 }
 
 

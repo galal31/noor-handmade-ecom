@@ -39,11 +39,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'استعادة كلمة المرور | Noor Handmade';
+$page_stylesheets = ['css/account-flow.css?v=1'];
 require_once __DIR__ . '/includes/header.php';
 ?>
-<div style="height:90px"></div><main class="container py-5" style="max-width:620px"><div class="card border-0 shadow-sm p-4">
-<h1 class="h3 mb-3">استعادة كلمة المرور</h1>
-<?php foreach ($errors as $error): ?><div class="alert alert-danger"><?= htmlspecialchars($error) ?></div><?php endforeach; ?>
-<?php if ($success): ?><div class="alert alert-success"><?= htmlspecialchars($success) ?></div><?php endif; ?>
-<form method="post"><input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>"><label for="email" class="form-label">البريد الإلكتروني</label><input id="email" name="email" type="email" class="form-control mb-3" required><button class="btn btn-primary" type="submit">إرسال رابط الاستعادة</button></form>
-</div></main><?php require_once __DIR__ . '/includes/footer.php'; ?>
+<main class="account-flow-page">
+    <div class="container">
+        <section class="account-flow-shell">
+            <div class="row g-0">
+                <div class="col-lg-5">
+                    <div class="account-flow-brand">
+                        <a href="index.php"><img src="images/logo.jpeg" alt="شعار Noor Handmade"></a>
+                        <h2>Noor Handmade</h2>
+                        <p>نساعدك ترجع لحسابك بأمان وتكمل اكتشاف القطع المصنوعة بحب.</p>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="account-flow-content">
+                        <span class="account-flow-icon"><i class="fa-solid fa-key"></i></span>
+                        <span class="account-flow-kicker">أمان حسابك</span>
+                        <h1 class="account-flow-title">نسيت كلمة المرور؟</h1>
+                        <p class="account-flow-copy">اكتب البريد المرتبط بحسابك، وسنرسل لك رابطًا آمنًا لتعيين كلمة مرور جديدة. الرابط صالح لمدة ساعة.</p>
+
+                        <?php foreach ($errors as $error): ?>
+                            <div class="alert alert-danger account-flow-alert"><i class="fa-solid fa-circle-exclamation ms-2"></i><?= htmlspecialchars($error) ?></div>
+                        <?php endforeach; ?>
+                        <?php if ($success): ?>
+                            <div class="alert alert-success account-flow-alert"><i class="fa-solid fa-circle-check ms-2"></i><?= htmlspecialchars($success) ?></div>
+                        <?php endif; ?>
+
+                        <form method="post">
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
+                            <div class="mb-4">
+                                <label for="email" class="form-label">البريد الإلكتروني</label>
+                                <div class="account-input-wrap">
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <input id="email" name="email" type="email" class="form-control" autocomplete="email" value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>" placeholder="name@example.com" required>
+                                </div>
+                            </div>
+                            <div class="d-grid"><button class="btn account-flow-submit" type="submit">إرسال رابط الاستعادة <i class="fa-solid fa-arrow-left me-2"></i></button></div>
+                        </form>
+                        <a class="account-flow-back" href="login.php"><i class="fa-solid fa-arrow-right"></i> العودة لتسجيل الدخول</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>
