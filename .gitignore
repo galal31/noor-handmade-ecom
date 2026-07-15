@@ -1,0 +1,6 @@
+/includes/local_config.php
+/storage/logs/*.log
+/vendor/
+/.idea/
+/.vscode/
+/.env

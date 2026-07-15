@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.page-wrapper {
+    display: flex;
+}
+
+.sidebar-wrapper {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 999;
+    background: #1d2531;
+    color: #adb5bd;
+    transition: all 0.3s ease;
+}
+
+.page-wrapper.toggled .sidebar-wrapper {
+    right: -260px;
+}
+
+.sidebar-brand {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid #3a3f46;
+}
+
+.sidebar-brand a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #3a3f46;
+}
+
+.user-info .user-name {
+    font-size: 1rem;
+    color: #fff;
+}
+
+.sidebar-menu {
+    padding-top: 10px;
+}
+
+.sidebar-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-menu .header-menu span {
+    font-weight: bold;
+    font-size: 0.8rem;
+    padding: 15px 20px 5px 20px;
+    display: inline-block;
+    color: #6c757d;
+}
+
+.sidebar-menu ul li a {
+    display: block;
+    width: 100%;
+    color: #adb5bd;
+    text-decoration: none;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-menu ul li a:hover, .sidebar-menu ul li a.active {
+    background: #3a3f46;
+    color: #fff;
+    border-right: 3px solid #0d6efd;
+}
+
+.sidebar-menu ul li a i {
+    margin-left: 10px;
+    width: 25px;
+    display: inline-block;
+}
+
+.page-content {
+    width: 100%;
+    padding-right: 260px;
+    transition: all 0.3s ease;
+}
+
+.page-wrapper.toggled .page-content {
+    padding-right: 0;
+}
+
+.header {
+    width: calc(100% - 260px);
+    right: 260px;
+    transition: all 0.3s ease;
+}
+
+.page-wrapper.toggled .header {
+    width: 100%;
+    right: 0;
+}
+.content-container{
+    padding-top: 80px;
+}
