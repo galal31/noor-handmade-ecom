@@ -115,6 +115,37 @@ require_once 'includes/header.php';
         justify-content: center;
     }
 
+    .login-support-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 1.25rem;
+    }
+
+    .login-support-link {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border: 1px solid rgba(22, 160, 133, 0.2);
+        border-radius: 12px;
+        background: #f6fcfa;
+        color: #117a65;
+        font-size: 0.88rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .login-support-link:hover {
+        border-color: var(--primary-color);
+        background: #e8f7f3;
+        color: #0f6d5b;
+        transform: translateY(-1px);
+    }
+
     @media (max-width: 991px) {
         .login-image-section {
             display: none;
@@ -123,9 +154,12 @@ require_once 'includes/header.php';
         .login-form-section {
             padding: 2rem;
         }
+
+        .login-support-links {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
-<div style="height: 80px;"></div>
 <div class="container login-container">
     <div class="col-lg-10 col-md-12">
         <div class="card login-card">
@@ -161,7 +195,10 @@ require_once 'includes/header.php';
                                         style="color: var(--primary-color);">أنشئ حسابًا جديدًا</a></small>
                             </div>
                         </form>
-                        <div class="text-center mt-3"><a href="forgot_password.php">نسيت كلمة المرور؟</a> · <a href="resend_verification.php">إعادة إرسال رابط التفعيل</a></div>
+                        <div class="login-support-links">
+                            <a class="login-support-link" href="forgot_password.php"><i class="fa-solid fa-key"></i> نسيت كلمة المرور؟</a>
+                            <a class="login-support-link" href="resend_verification.php"><i class="fa-regular fa-envelope"></i> إعادة إرسال رابط التفعيل</a>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-5 login-image-section">

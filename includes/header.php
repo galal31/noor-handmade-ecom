@@ -96,10 +96,13 @@ $cart_csrf_token = get_or_create_csrf_token('cart_csrf_token');
             transition: all 0.3s ease;
         }
 
-        .btn-cart:hover {
+        a.btn-cart:hover,
+        a.btn-cart:focus-visible {
+            background-color: #cf6812 !important;
+            border-color: #cf6812 !important;
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
-            color: #fff;
+            color: #fff !important;
         }
 
         .dropdown-menu {
@@ -135,6 +138,7 @@ $cart_csrf_token = get_or_create_csrf_token('cart_csrf_token');
             background-color: #117a65;
             border-color: #117a65;
             color: #fff;
+            box-shadow: 0 8px 18px rgba(17, 122, 101, 0.24);
         }
     </style>
 </head>

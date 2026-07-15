@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $page_title = 'استعادة كلمة المرور | Noor Handmade';
-$page_stylesheets = ['css/account-flow.css?v=1'];
+$page_stylesheets = ['css/account-flow.css?v=2'];
 require_once __DIR__ . '/includes/header.php';
 ?>
 <main class="account-flow-page">

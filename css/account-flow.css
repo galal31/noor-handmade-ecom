@@ -65,6 +65,8 @@
 .account-flow-brand h2 { margin: 1.5rem 0 .65rem; font-weight: 800; }
 .account-flow-brand p { max-width: 310px; margin: 0; color: rgba(255,255,255,.86); line-height: 1.9; }
 .account-flow-content { padding: 3.75rem 4rem; }
+.account-flow-content-compact { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+.account-flow-shell-wide { max-width: 1040px; }
 
 .account-flow-icon {
     width: 64px;
@@ -77,6 +79,9 @@
     color: #16a085;
     font-size: 1.55rem;
 }
+
+.account-flow-icon-success { background:#e6f7ef; color:#16875f; }
+.account-flow-icon-error { background:#fff0ee; color:#d94b3d; }
 
 .account-flow-kicker {
     display: block;

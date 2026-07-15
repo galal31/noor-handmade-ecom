@@ -264,16 +264,53 @@ $page_title = 'Noor Handmade | عالم من الإبداع اليدوي';
             color: #fff;
             padding: 40px 0;
         }
+
+        @media (max-width: 767.98px) {
+            .hero-swiper {
+                height: clamp(520px, 68vh, 640px);
+            }
+
+            .hero-swiper .slide-content {
+                max-width: calc(100% - 32px);
+                padding: 1.6rem 1.2rem;
+            }
+
+            .hero-swiper .hero-title {
+                font-size: clamp(2.15rem, 12vw, 3rem);
+                line-height: 1.15;
+            }
+
+            .hero-swiper .hero-subtitle {
+                margin-bottom: 1.5rem;
+                font-size: 1rem;
+                line-height: 1.7;
+            }
+
+            .hero-swiper .btn-hero {
+                padding: 10px 28px;
+                font-size: 1rem;
+            }
+
+            .hero-swiper .swiper-button-next,
+            .hero-swiper .swiper-button-prev {
+                width: 42px;
+                height: 42px;
+            }
+        }
     </style>
 <main>
     <?php if (!empty($important_products)): ?>
     <section class="hero-section">
         <div class="swiper hero-swiper">
             <div class="swiper-wrapper">
-                <?php foreach ($important_products as $product): ?>
+                <?php foreach ($important_products as $heroIndex => $product): ?>
                 <div class="swiper-slide" style="background-image: url('images/products/<?= htmlspecialchars($product['display_image']) ?>')">
                     <div class="slide-content">
-                        <h1 class="hero-title"><?= htmlspecialchars($product['name']) ?></h1>
+                        <?php if ($heroIndex === 0): ?>
+                            <h1 class="hero-title"><?= htmlspecialchars($product['name']) ?></h1>
+                        <?php else: ?>
+                            <h2 class="hero-title"><?= htmlspecialchars($product['name']) ?></h2>
+                        <?php endif; ?>
                         <?php
                             $short_description = mb_substr($product['description'], 0, 100, 'UTF-8');
                             $description_suffix = mb_strlen($product['description'], 'UTF-8') > 100 ? '...' : '';

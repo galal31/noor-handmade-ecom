@@ -245,6 +245,12 @@ require_once 'includes/header.php';
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
+    .mySwiper2 .swiper-slide > a {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
     .mySwiper {
         height: 100px;
         
@@ -295,6 +301,47 @@ require_once 'includes/header.php';
     
     .swiper-pagination-bullet {
         background: var(--primary-color, #0d6efd) !important;
+    }
+
+    @media (max-width: 767.98px) {
+        .product-detail-container {
+            width: calc(100% - 24px);
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        .product-detail-container > .row {
+            --bs-gutter-x: 1rem;
+            --bs-gutter-y: 1.75rem;
+        }
+
+        .mySwiper2 {
+            height: auto;
+            aspect-ratio: 4 / 3;
+        }
+
+        .mySwiper {
+            height: 84px;
+        }
+
+        .product-info h1,
+        .product-price-details {
+            font-size: 2rem;
+        }
+
+        .product-info > .d-flex.align-items-center {
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .quantity-selector {
+            margin-inline-end: 0 !important;
+        }
+
+        .btn-add-to-cart-lg {
+            min-width: 180px;
+            min-height: 48px;
+        }
     }
 </style>
 <div class="container product-detail-container">
@@ -351,7 +398,7 @@ require_once 'includes/header.php';
                     </div>
                     <button class="btn btn-primary-custom btn-add-to-cart-lg flex-grow-1"
                         data-product-id="<?= $product['id'] ?>" <?= (int) $product['stock_quantity'] < 1 ? 'disabled' : '' ?>>
-                        <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                        <i class="fas fa-cart-plus me-2"></i> أضف إلى السلة
                     </button>
                 </div>
             </div>
@@ -362,7 +409,7 @@ require_once 'includes/header.php';
 <?php if (!empty($related_products)): ?>
     <div class="related-products-section">
         <div class="container">
-            <h2 class="section-title text-center">Related Products</h2>
+            <h2 class="section-title text-center">منتجات مشابهة</h2>
             <div class="row g-4">
                 <?php foreach ($related_products as $related_product): ?>
                     <div class="col-md-6 col-lg-3">
