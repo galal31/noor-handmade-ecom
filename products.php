@@ -104,6 +104,26 @@ if ($selected_category) {
 } elseif ($category_slug !== null) {
     $current_category_name = "القسم غير موجود";
 }
+
+$page_title = $selected_category
+    ? $selected_category['name'] . ' | Noor Handmade'
+    : 'كل المنتجات اليدوية | Noor Handmade';
+$page_description = $selected_category
+    ? 'تصفح منتجات قسم ' . $selected_category['name'] . ' من Noor Handmade واختر من قطع يدوية مميزة مصنوعة بعناية.'
+    : 'تصفح جميع منتجات Noor Handmade اليدوية واكتشف قطعًا مميزة مصنوعة بعناية لتناسب ذوقك.';
+$page_canonical_path = 'products.php';
+if ($selected_category) {
+    $page_canonical_path .= '?category=' . rawurlencode($selected_category['slug']);
+}
+
+$has_seo_filter = $min_price !== null || $max_price !== null || $sort_by !== 'newest';
+if ($category_slug !== null && !$selected_category) {
+    $page_robots = 'noindex, follow';
+} elseif ($has_seo_filter) {
+    $page_robots = 'noindex, follow';
+} elseif ($current_page > 1) {
+    $page_canonical_path .= ($selected_category ? '&' : '?') . 'page=' . $current_page;
+}
 ?>
 
 

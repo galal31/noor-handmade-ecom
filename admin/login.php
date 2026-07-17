@@ -60,12 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+if (!headers_sent()) {
+    header('X-Robots-Tag: noindex, nofollow', true);
+}
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/jpeg" href="../images/logo.jpeg">
     <title>تسجيل دخول الأدمن</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <style>

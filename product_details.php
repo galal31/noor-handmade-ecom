@@ -56,6 +56,14 @@ if (empty($product_images)) {
 }
 
 $page_title = htmlspecialchars_decode($product['name'], ENT_QUOTES) . ' | Noor Handmade';
+$product_description_text = trim(preg_replace('/\s+/u', ' ', strip_tags(html_entity_decode((string) $product['description'], ENT_QUOTES, 'UTF-8'))));
+$page_description = $product_description_text !== ''
+    ? $product_description_text
+    : 'اكتشف ' . $product['name'] . ' من Noor Handmade، قطعة يدوية مميزة مصنوعة بعناية.';
+$page_canonical_path = 'product_details.php?slug=' . rawurlencode($product['slug']);
+$page_og_type = 'product';
+$page_image = 'images/products/' . $main_image;
+$page_image_alt = $product['name'];
 require_once 'includes/header.php';
 ?>
 

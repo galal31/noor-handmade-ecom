@@ -6,9 +6,55 @@ send_security_headers();
 
 require_once __DIR__ . '/db_connection.php';
 require_once __DIR__ . '/cart_functions.php';
+require_once __DIR__ . '/app_config.php';
 
 if (!isset($page_title)) {
     $page_title = 'Noor Handmade | نور للمنتجات اليدوية';
+}
+
+$seo_noindex_pages = [
+    'cart.php',
+    'checkout.php',
+    'forgot_password.php',
+    'login.php',
+    'my_orders.php',
+    'register.php',
+    'resend_verification.php',
+    'reset_password.php',
+    'thank_you.php',
+    'track_order.php',
+    'verify.php',
+];
+$seo_current_page = basename((string) ($_SERVER['SCRIPT_NAME'] ?? 'index.php'));
+$page_description = trim((string) ($page_description ?? 'اكتشف منتجات Noor Handmade اليدوية المصنوعة بعناية، واختر قطعًا مميزة تضيف لمسة خاصة إلى يومك.'));
+$page_description = preg_replace('/\s+/u', ' ', strip_tags($page_description)) ?: '';
+if (mb_strlen($page_description, 'UTF-8') > 165) {
+    $page_description = rtrim(mb_substr($page_description, 0, 162, 'UTF-8')) . '...';
+}
+
+if (!isset($page_robots)) {
+    $page_robots = in_array($seo_current_page, $seo_noindex_pages, true)
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+}
+
+$seo_base_url = rtrim(app_base_url(), '/');
+if (!isset($canonical_url)) {
+    $canonical_path = isset($page_canonical_path)
+        ? ltrim((string) $page_canonical_path, '/')
+        : $seo_current_page;
+    $canonical_url = $seo_base_url . '/' . $canonical_path;
+}
+$canonical_url = (string) $canonical_url;
+$page_og_type = (string) ($page_og_type ?? 'website');
+$page_image = trim((string) ($page_image ?? 'images/logo.jpeg'));
+if ($page_image !== '' && !preg_match('~^https?://~i', $page_image)) {
+    $page_image = $seo_base_url . '/' . ltrim($page_image, '/');
+}
+$page_image_alt = trim((string) ($page_image_alt ?? $page_title));
+
+if (stripos($page_robots, 'noindex') !== false && !headers_sent()) {
+    header('X-Robots-Tag: noindex, nofollow', true);
 }
 
 
@@ -25,8 +71,29 @@ $cart_csrf_token = get_or_create_csrf_token('cart_csrf_token');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
     <meta name="csrf-token" content="<?= htmlspecialchars($cart_csrf_token, ENT_QUOTES, 'UTF-8') ?>">
     <title><?= htmlspecialchars($page_title) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8') ?>">
+    <meta name="robots" content="<?= htmlspecialchars($page_robots, ENT_QUOTES, 'UTF-8') ?>">
+    <link rel="canonical" href="<?= htmlspecialchars($canonical_url, ENT_QUOTES, 'UTF-8') ?>">
+
+    <meta property="og:locale" content="ar_EG">
+    <meta property="og:site_name" content="Noor Handmade">
+    <meta property="og:type" content="<?= htmlspecialchars($page_og_type, ENT_QUOTES, 'UTF-8') ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8') ?>">
+    <meta property="og:url" content="<?= htmlspecialchars($canonical_url, ENT_QUOTES, 'UTF-8') ?>">
+    <?php if ($page_image !== ''): ?>
+        <meta property="og:image" content="<?= htmlspecialchars($page_image, ENT_QUOTES, 'UTF-8') ?>">
+        <meta property="og:image:alt" content="<?= htmlspecialchars($page_image_alt, ENT_QUOTES, 'UTF-8') ?>">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image" content="<?= htmlspecialchars($page_image, ENT_QUOTES, 'UTF-8') ?>">
+    <?php else: ?>
+        <meta name="twitter:card" content="summary">
+    <?php endif; ?>
+    <meta name="twitter:title" content="<?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8') ?>">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">

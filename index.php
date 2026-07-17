@@ -49,6 +49,14 @@ $categories_query = "
 $categories = $pdo->query($categories_query)->fetchAll(PDO::FETCH_ASSOC);
 
 $page_title = 'Noor Handmade | قطع يدوية مصنوعة بحب';
+$page_description = 'اكتشف قطعًا يدوية مميزة من Noor Handmade، مصنوعة بعناية لتضيف لمسة دافئة وشخصية إلى يومك.';
+$page_canonical_path = '';
+$page_image = $featured_product
+    ? 'images/products/' . $featured_product['display_image']
+    : 'images/logo.jpeg';
+$page_image_alt = $featured_product
+    ? $featured_product['name']
+    : 'Noor Handmade للمنتجات اليدوية';
 
 require_once __DIR__ . '/includes/header.php';
 ?>
