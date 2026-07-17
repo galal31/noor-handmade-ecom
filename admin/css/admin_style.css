@@ -3,6 +3,7 @@
 body {
     font-family: 'Cairo', sans-serif;
     background-color: #f8f9fa;
+    overflow-x: hidden;
 }
 
 .page-wrapper {
@@ -19,6 +20,8 @@ body {
     background: #1d2531;
     color: #adb5bd;
     transition: all 0.3s ease;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .page-wrapper.toggled .sidebar-wrapper {
@@ -108,4 +111,66 @@ body {
 }
 .content-container{
     padding-top: 80px;
+}
+
+.sidebar-toggle {
+    border: 0;
+    background: transparent;
+}
+
+.sidebar-backdrop {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    .page-wrapper {
+        display: block;
+    }
+
+    .sidebar-wrapper {
+        right: -280px;
+        width: min(280px, 86vw);
+        z-index: 1050;
+        box-shadow: -12px 0 35px rgba(13, 21, 31, 0.24);
+    }
+
+    .page-wrapper.toggled .sidebar-wrapper {
+        right: 0;
+    }
+
+    .page-content,
+    .page-wrapper.toggled .page-content {
+        width: 100%;
+        min-width: 0;
+        padding-right: 0;
+    }
+
+    .header,
+    .page-wrapper.toggled .header {
+        right: 0;
+        width: 100%;
+    }
+
+    .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1040;
+        display: block;
+        border: 0;
+        background: rgba(13, 21, 31, 0.48);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .page-wrapper.toggled .sidebar-backdrop {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+    }
 }
