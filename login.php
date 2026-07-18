@@ -202,7 +202,7 @@ require_once 'includes/header.php';
                     </div>
                 </div>
                 <div class="col-lg-5 login-image-section">
-                    <img src="images/logo.jpeg" alt="Noor Handmade Logo" width="150"
+                    <img src="images/logo.jpeg" alt="Noor Handmade Logo" width="150" height="150" decoding="async"
                         style="border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
                 </div>
             </div>

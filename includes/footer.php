@@ -1,19 +1,26 @@
 <footer class="footer bg-dark text-white pt-5 pb-4 mt-auto">
     <div class="container text-center text-md-end">
         <div class="row">
-            <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
+            <div class="col-md-6 col-lg-4 mx-auto mt-3">
                 <h6 class="text-uppercase mb-4 fw-bold" style="color: var(--primary-color);">Noor Handmade</h6>
                 <p>متجر متخصص في بيع المنتجات اليدوية المصنوعة بحب وشغف. كل قطعة لدينا تحكي قصة فريدة من الإبداع.</p>
             </div>
 
-            <div class="col-md-4 col-lg-2 col-xl-2 mx-auto mt-3">
+            <div class="col-md-6 col-lg-2 mx-auto mt-3">
                 <h6 class="text-uppercase mb-4 fw-bold">روابط سريعة</h6>
                 <p><a href="products.php" class="text-white text-decoration-none">المنتجات</a></p>
                 <p><a href="track_order.php" class="text-white text-decoration-none">تتبع طلبك</a></p>
-                <p><a href="#" class="text-white text-decoration-none">سياسة الخصوصية</a></p>
+                <p><a href="about.php" class="text-white text-decoration-none">من نحن</a></p>
+                <p><a href="faq.php" class="text-white text-decoration-none">الأسئلة الشائعة</a></p>
             </div>
 
-            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+            <div class="col-md-6 col-lg-3 mx-auto mt-3">
+                <h6 class="text-uppercase mb-4 fw-bold">السياسات</h6>
+                <p><a href="privacy.php" class="text-white text-decoration-none">سياسة الخصوصية</a></p>
+                <p><a href="shipping_returns.php" class="text-white text-decoration-none">الشحن والاستبدال والاسترجاع</a></p>
+            </div>
+
+            <div class="col-md-6 col-lg-3 mx-auto mt-3">
                 <h6 class="text-uppercase mb-4 fw-bold">تواصل معنا</h6>
                 <p><i class="fas fa-home me-3"></i> القاهرة, مصر</p>
                 <p><i class="fas fa-phone me-3"></i> 01150926556</p>
@@ -39,22 +46,39 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+<?php if (in_array('swiper', $page_assets ?? [], true)): ?>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<?php endif; ?>
+<?php if (in_array('fancybox', $page_assets ?? [], true)): ?>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<?php endif; ?>
+<?php if (in_array('nouislider', $page_assets ?? [], true)): ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+<?php endif; ?>
+<?php if (in_array('sweetalert', $page_assets ?? [], true)): ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php endif; ?>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
         
-        const cardSwiper = new Swiper('.product-card-slider', {
-            loop: true,
-            autoplay: { delay: 3000, disableOnInteraction: false },
-            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-        });
+        if (typeof Swiper !== 'undefined') {
+            document.querySelectorAll('.product-card-slider').forEach(function(slider) {
+                const slideCount = slider.querySelectorAll('.swiper-slide').length;
+                new Swiper(slider, {
+                    loop: slideCount > 1,
+                    autoplay: slideCount > 1 ? { delay: 3000, disableOnInteraction: false } : false,
+                    navigation: {
+                        nextEl: slider.querySelector('.swiper-button-next'),
+                        prevEl: slider.querySelector('.swiper-button-prev')
+                    }
+                });
+            });
+        }
 
         const priceSlider = document.getElementById('price-slider');
-        if (priceSlider) {
+        if (priceSlider && typeof noUiSlider !== 'undefined') {
             const minPriceInput = document.getElementById('min-price-input');
             const maxPriceInput = document.getElementById('max-price-input');
             const priceDisplay = document.getElementById('price-slider-display');

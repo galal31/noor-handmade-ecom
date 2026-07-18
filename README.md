@@ -30,3 +30,16 @@
 - تفعيل البريد واستعادة كلمة المرور.
 - حماية جلسات المستخدم والأدمن وعمليات رفع الصور.
 
+## إعداد SEO بعد النشر
+
+1. اضبط `APP_URL` في `includes/local_config.php` على رابط الموقع النهائي باستخدام HTTPS، بدون شرطة مائلة في النهاية.
+2. أضف قيمة التحقق من Google Search Console في `GOOGLE_SITE_VERIFICATION` عند استخدام طريقة HTML tag.
+3. تأكد أن الروابط التالية تعمل على الدومين النهائي:
+   - `/robots.txt`
+   - `/sitemap.xml`
+   - `/merchant-feed.xml`
+4. أرسل `/sitemap.xml` داخل Google Search Console، ثم افحص الرئيسية وصفحة منتج باستخدام URL Inspection.
+5. استخدم `/merchant-feed.xml` كمصدر بيانات مجدول داخل Google Merchant Center.
+6. اضبط إعدادات الشحن والاسترجاع الحقيقية داخل Merchant Center لتطابق صفحة `shipping_returns.php` وسياسة المتجر الفعلية.
+
+ملفات Sitemap وMerchant Center يتم توليدها ديناميكيًا من الأقسام والمنتجات الموجودة في قاعدة البيانات.

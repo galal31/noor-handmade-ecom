@@ -1,0 +1,80 @@
+.info-page {
+    min-height: 65vh;
+    padding: 3.5rem 0 5rem;
+    background: #fffdf9;
+}
+
+.info-page-header {
+    max-width: 780px;
+    margin-bottom: 2.5rem;
+}
+
+.info-page-header h1 {
+    margin-bottom: 1rem;
+    color: #263734;
+    font-size: clamp(2.2rem, 5vw, 3.7rem);
+    line-height: 1.25;
+}
+
+.info-page-header p,
+.info-section p,
+.info-section li {
+    color: #5f6f6a;
+    line-height: 2;
+}
+
+.info-content {
+    max-width: 900px;
+}
+
+.info-section {
+    padding: 1.75rem 0;
+    border-top: 1px solid #e8e2d9;
+}
+
+.info-section h2 {
+    margin-bottom: 0.85rem;
+    color: #263734;
+    font-size: 1.45rem;
+}
+
+.info-section ul {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.info-contact-box {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #d9eee9;
+    background: #f4fbf9;
+}
+
+.info-contact-box a {
+    color: #117a65;
+    font-weight: 700;
+}
+
+.faq-list details {
+    padding: 1.3rem 0;
+    border-top: 1px solid #e8e2d9;
+}
+
+.faq-list summary {
+    color: #263734;
+    font-size: 1.08rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.faq-list details p {
+    margin: 0.85rem 0 0;
+    color: #5f6f6a;
+    line-height: 1.9;
+}
+
+@media (max-width: 575.98px) {
+    .info-page {
+        padding-top: 2.25rem;
+    }
+}

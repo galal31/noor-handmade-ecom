@@ -6,7 +6,7 @@ send_security_headers();
 
 require_once __DIR__ . '/db_connection.php';
 require_once __DIR__ . '/cart_functions.php';
-require_once __DIR__ . '/app_config.php';
+require_once __DIR__ . '/seo.php';
 
 if (!isset($page_title)) {
     $page_title = 'Noor Handmade | نور للمنتجات اليدوية';
@@ -26,6 +26,15 @@ $seo_noindex_pages = [
     'verify.php',
 ];
 $seo_current_page = basename((string) ($_SERVER['SCRIPT_NAME'] ?? 'index.php'));
+$seo_default_assets = [
+    'index.php' => ['sweetalert'],
+    'products.php' => ['swiper', 'nouislider', 'sweetalert'],
+    'product_details.php' => ['swiper', 'fancybox', 'sweetalert'],
+    'cart.php' => ['sweetalert'],
+];
+$page_assets = isset($page_assets) && is_array($page_assets)
+    ? array_values(array_unique($page_assets))
+    : ($seo_default_assets[$seo_current_page] ?? []);
 $page_description = trim((string) ($page_description ?? 'اكتشف منتجات Noor Handmade اليدوية المصنوعة بعناية، واختر قطعًا مميزة تضيف لمسة خاصة إلى يومك.'));
 $page_description = preg_replace('/\s+/u', ' ', strip_tags($page_description)) ?: '';
 if (mb_strlen($page_description, 'UTF-8') > 165) {
@@ -52,6 +61,14 @@ if ($page_image !== '' && !preg_match('~^https?://~i', $page_image)) {
     $page_image = $seo_base_url . '/' . ltrim($page_image, '/');
 }
 $page_image_alt = trim((string) ($page_image_alt ?? $page_title));
+$google_site_verification = trim((string) app_config('GOOGLE_SITE_VERIFICATION', ''));
+$page_structured_data = isset($page_structured_data) && is_array($page_structured_data)
+    ? array_values($page_structured_data)
+    : [];
+if ($seo_current_page === 'index.php' && stripos($page_robots, 'noindex') === false) {
+    array_unshift($page_structured_data, seo_website_schema());
+    array_unshift($page_structured_data, seo_organization_schema());
+}
 
 if (stripos($page_robots, 'noindex') !== false && !headers_sent()) {
     header('X-Robots-Tag: noindex, nofollow', true);
@@ -76,6 +93,9 @@ $cart_csrf_token = get_or_create_csrf_token('cart_csrf_token');
     <title><?= htmlspecialchars($page_title) ?></title>
     <meta name="description" content="<?= htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8') ?>">
     <meta name="robots" content="<?= htmlspecialchars($page_robots, ENT_QUOTES, 'UTF-8') ?>">
+    <?php if ($google_site_verification !== ''): ?>
+        <meta name="google-site-verification" content="<?= htmlspecialchars($google_site_verification, ENT_QUOTES, 'UTF-8') ?>">
+    <?php endif; ?>
     <link rel="canonical" href="<?= htmlspecialchars($canonical_url, ENT_QUOTES, 'UTF-8') ?>">
 
     <meta property="og:locale" content="ar_EG">
@@ -94,13 +114,30 @@ $cart_csrf_token = get_or_create_csrf_token('cart_csrf_token');
     <?php endif; ?>
     <meta name="twitter:title" content="<?= htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8') ?>">
     <meta name="twitter:description" content="<?= htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8') ?>">
+    <?php foreach ($page_structured_data as $schema): ?>
+        <?php if (is_array($schema) && !empty($schema['@type'])): ?>
+            <script type="application/ld+json"><?= json_encode(
+                $schema,
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+            ) ?></script>
+        <?php endif; ?>
+    <?php endforeach; ?>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php if (in_array('swiper', $page_assets, true)): ?>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <?php endif; ?>
+    <?php if (in_array('fancybox', $page_assets, true)): ?>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css">
+    <?php endif; ?>
+    <?php if (in_array('nouislider', $page_assets, true)): ?>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+    <?php endif; ?>
+
+    <?php if (!empty($page_preload_image)): ?>
+        <link rel="preload" as="image" href="<?= htmlspecialchars(seo_absolute_url((string) $page_preload_image), ENT_QUOTES, 'UTF-8') ?>" fetchpriority="high">
+    <?php endif; ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -207,6 +244,37 @@ $cart_csrf_token = get_or_create_csrf_token('cart_csrf_token');
             color: #fff;
             box-shadow: 0 8px 18px rgba(17, 122, 101, 0.24);
         }
+
+        .seo-breadcrumb {
+            margin-bottom: 1.25rem;
+            color: #68736f;
+            font-size: 0.9rem;
+        }
+
+        .seo-breadcrumb ol {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .seo-breadcrumb li + li::before {
+            content: '/';
+            margin-inline-end: 0.55rem;
+            color: #a3aaa7;
+        }
+
+        .seo-breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .seo-breadcrumb a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -215,7 +283,7 @@ $cart_csrf_token = get_or_create_csrf_token('cart_csrf_token');
         <nav class="navbar navbar-expand-lg fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="index.php">
-                    <img src="images/logo.jpeg" alt="Noor Handmade Logo" height="45"
+                    <img src="images/logo.jpeg" alt="Noor Handmade Logo" width="45" height="45" decoding="async"
                         class="d-inline-block align-middle me-2" style="border-radius: 8px;">
                     Noor Handmade
                 </a>

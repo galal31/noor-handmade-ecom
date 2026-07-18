@@ -38,7 +38,7 @@ $isSuccess = $message_icon === 'success';
             <div class="row g-0">
                 <div class="col-lg-5">
                     <div class="account-flow-brand">
-                        <a href="index.php"><img src="images/logo.jpeg" alt="شعار Noor Handmade"></a>
+                        <a href="index.php"><img src="images/logo.jpeg" alt="شعار Noor Handmade" width="118" height="118" decoding="async"></a>
                         <h2>Noor Handmade</h2>
                         <p><?= $isSuccess ? 'حسابك أصبح جاهزًا، وننتظرك لاكتشاف منتجاتنا المصنوعة بحب.' : 'سنساعدك في الحصول على رابط تفعيل جديد والعودة لحسابك.' ?></p>
                     </div>

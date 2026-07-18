@@ -4,6 +4,7 @@ Options -Indexes
     RewriteEngine On
     RewriteRule ^robots\.txt$ robots.php [L]
     RewriteRule ^sitemap\.xml$ sitemap.php [L]
+    RewriteRule ^merchant-feed\.xml$ merchant_feed.php [L]
 </IfModule>
 
 <IfModule mod_php.c>

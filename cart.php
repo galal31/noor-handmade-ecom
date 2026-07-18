@@ -169,7 +169,8 @@ require_once 'includes/header.php';
                                         
                                         <a href="product_details.php?slug=<?= htmlspecialchars($product['slug']) ?>">
                                             <img src="images/products/<?= htmlspecialchars($product['main_image'] ?? 'placeholder.svg') ?>" 
-                                                 class="cart-img" alt="<?= htmlspecialchars($product['name']) ?>">
+                                                 class="cart-img" alt="<?= htmlspecialchars($product['name']) ?>"
+                                                 width="80" height="80" loading="lazy" decoding="async">
                                         </a>
                                         
                                         <div class="ms-3">
@@ -246,8 +247,6 @@ require_once 'includes/header.php';
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // دالة لتحديث الكمية (زيادة أو نقصان)

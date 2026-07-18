@@ -9,6 +9,10 @@ $base_url = rtrim(app_base_url(), '/');
 $urls = [
     $base_url . '/',
     $base_url . '/products.php',
+    $base_url . '/about.php',
+    $base_url . '/faq.php',
+    $base_url . '/privacy.php',
+    $base_url . '/shipping_returns.php',
 ];
 
 $category_slugs = $pdo->query("SELECT slug FROM categories WHERE slug IS NOT NULL AND slug != '' ORDER BY id ASC")

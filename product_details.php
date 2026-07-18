@@ -4,26 +4,47 @@ start_secure_session();
 send_security_headers();
 require_once 'includes/db_connection.php';
 
+function render_product_not_found_page(string $requested_slug = ''): void
+{
+    http_response_code(404);
+    $page_title = 'المنتج غير موجود | Noor Handmade';
+    $page_description = 'المنتج الذي تبحث عنه غير متاح حاليًا. تصفح منتجات Noor Handmade المتاحة.';
+    $page_robots = 'noindex, follow';
+    $page_assets = [];
+    $page_canonical_path = $requested_slug !== ''
+        ? 'product_details.php?slug=' . rawurlencode($requested_slug)
+        : 'product_details.php';
+    $page_image = 'images/logo.jpeg';
+    require __DIR__ . '/includes/header.php';
+    ?>
+    <main class="container py-5 text-center" style="min-height: 60vh;">
+        <p class="text-muted mb-2">404</p>
+        <h1 class="mb-3">المنتج غير موجود</h1>
+        <p class="text-muted mb-4">قد يكون المنتج قد أزيل أو تغيّر رابطه. يمكنك تصفح المنتجات المتاحة حاليًا.</p>
+        <a href="products.php" class="btn btn-primary-custom">تصفح المنتجات</a>
+    </main>
+    <?php
+    require __DIR__ . '/includes/footer.php';
+    exit;
+}
+
 $product_slug = isset($_GET['slug']) ? trim($_GET['slug']) : ''; 
 
 if (empty($product_slug)) { 
-    
-    header("Location: products.php");
-    exit;
+    render_product_not_found_page();
 }
 
 
 try {
     
     
-    $stmt = $pdo->prepare("SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.id WHERE p.slug = ?");
+    $stmt = $pdo->prepare("SELECT p.*, c.name as category_name, c.slug as category_slug FROM products p JOIN categories c ON p.category_id = c.id WHERE p.slug = ?");
     $stmt->execute([$product_slug]); 
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
     
     if (!$product) {
-        header("Location: products.php");
-        exit;
+        render_product_not_found_page($product_slug);
     }
 
     
@@ -64,6 +85,26 @@ $page_canonical_path = 'product_details.php?slug=' . rawurlencode($product['slug
 $page_og_type = 'product';
 $page_image = 'images/products/' . $main_image;
 $page_image_alt = $product['name'];
+$page_preload_image = $page_image;
+require_once __DIR__ . '/includes/seo.php';
+$product_canonical_url = seo_absolute_url($page_canonical_path);
+$product_schema_images = array_map(
+    static fn(string $image): string => 'images/products/' . $image,
+    array_values(array_unique($product_images))
+);
+$product_breadcrumb_items = [
+    ['name' => 'الرئيسية', 'url' => ''],
+    ['name' => 'المنتجات', 'url' => 'products.php'],
+    [
+        'name' => $product['category_name'],
+        'url' => 'products.php?category=' . rawurlencode($product['category_slug']),
+    ],
+    ['name' => $product['name'], 'url' => $page_canonical_path],
+];
+$page_structured_data = [
+    seo_breadcrumb_schema($product_breadcrumb_items),
+    seo_product_schema($product, $product_schema_images, $product_canonical_url),
+];
 require_once 'includes/header.php';
 ?>
 
@@ -352,16 +393,32 @@ require_once 'includes/header.php';
         }
     }
 </style>
+<div class="container">
+    <nav class="seo-breadcrumb" aria-label="مسار التنقل">
+        <ol>
+            <li><a href="index.php">الرئيسية</a></li>
+            <li><a href="products.php">المنتجات</a></li>
+            <li>
+                <a href="products.php?category=<?= urlencode($product['category_slug']) ?>">
+                    <?= htmlspecialchars($product['category_name']) ?>
+                </a>
+            </li>
+            <li aria-current="page"><?= htmlspecialchars($product['name']) ?></li>
+        </ol>
+    </nav>
+</div>
 <div class="container product-detail-container">
     <div class="row g-5">
         <div class="col-lg-6">
             <div class="swiper mySwiper2">
                 <div class="swiper-wrapper">
-                    <?php foreach ($product_images as $image): ?>
+                    <?php foreach ($product_images as $image_index => $image): ?>
                         <div class="swiper-slide">
                             <a href="images/products/<?= htmlspecialchars($image) ?>" data-fancybox="gallery">
                                 <img src="images/products/<?= htmlspecialchars($image) ?>"
-                                    alt="<?= htmlspecialchars($product['name']) ?>" />
+                                    alt="<?= htmlspecialchars($product['name']) ?>"
+                                    width="1000" height="750" decoding="async"
+                                    <?= $image_index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> />
                             </a>
                         </div>
                     <?php endforeach; ?>
@@ -375,7 +432,9 @@ require_once 'includes/header.php';
                 <div class="swiper-wrapper">
                     <?php foreach ($product_images as $image): ?>
                         <div class="swiper-slide">
-                            <img src="images/products/<?= htmlspecialchars($image) ?>" />
+                            <img src="images/products/<?= htmlspecialchars($image) ?>"
+                                alt="صورة مصغرة لمنتج <?= htmlspecialchars($product['name']) ?>"
+                                width="200" height="200" loading="lazy" decoding="async" />
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -423,7 +482,8 @@ require_once 'includes/header.php';
                     <div class="col-md-6 col-lg-3">
                         <a href="product_details.php?slug=<?= $related_product['slug'] ?>" class="product-card d-block">
                             <img src="images/products/<?= htmlspecialchars($related_product['main_image'] ?? 'placeholder.svg') ?>"
-                                class="card-img-top" alt="<?= htmlspecialchars($related_product['name']) ?>">
+                                class="card-img-top" alt="<?= htmlspecialchars($related_product['name']) ?>"
+                                width="800" height="1000" loading="lazy" decoding="async">
                             <div class="product-card-body">
                                 <h3 class="product-title"><?= htmlspecialchars($related_product['name']) ?></h3>
                                 <p class="product-price mt-2"><?= htmlspecialchars($related_product['price']) ?> EGP</p>
@@ -436,10 +496,8 @@ require_once 'includes/header.php';
     </div>
 <?php endif; ?>
 
-<?php require_once 'includes/footer.php'; ?>
-
 <script>
-    
+document.addEventListener('DOMContentLoaded', function() {
     const qtyInput = document.getElementById('quantity-input');
     document.getElementById('increase-qty').addEventListener('click', () => {
         const maxQty = parseInt(qtyInput.max);
@@ -467,7 +525,7 @@ require_once 'includes/header.php';
 
     
     var swiper2 = new Swiper(".mySwiper2", {
-        loop: true,
+        loop: <?= count($product_images) > 1 ? 'true' : 'false' ?>,
         effect: 'fade', 
         fadeEffect: {
             crossFade: true
@@ -493,6 +551,7 @@ require_once 'includes/header.php';
     Fancybox.bind('[data-fancybox="gallery"]', {
         
     });
+});
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -564,3 +623,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<?php require_once 'includes/footer.php'; ?>

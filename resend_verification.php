@@ -48,7 +48,7 @@ require_once __DIR__ . '/includes/header.php';
             <div class="row g-0">
                 <div class="col-lg-5">
                     <div class="account-flow-brand">
-                        <a href="index.php"><img src="images/logo.jpeg" alt="شعار Noor Handmade"></a>
+                        <a href="index.php"><img src="images/logo.jpeg" alt="شعار Noor Handmade" width="118" height="118" decoding="async"></a>
                         <h2>Noor Handmade</h2>
                         <p>خطوة صغيرة تفصلك عن تفعيل حسابك والدخول لعالم المنتجات اليدوية المميزة.</p>
                     </div>

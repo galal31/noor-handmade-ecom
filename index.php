@@ -57,6 +57,7 @@ $page_image = $featured_product
 $page_image_alt = $featured_product
     ? $featured_product['name']
     : 'Noor Handmade للمنتجات اليدوية';
+$page_preload_image = $page_image;
 
 require_once __DIR__ . '/includes/header.php';
 ?>
@@ -687,7 +688,8 @@ require_once __DIR__ . '/includes/header.php';
                     <?php if ($featured_product): ?>
                         <a class="home-hero-image-link" href="product_details.php?slug=<?= htmlspecialchars($featured_product['slug']) ?>">
                             <img src="images/products/<?= htmlspecialchars($featured_product['display_image']) ?>"
-                                 alt="<?= htmlspecialchars($featured_product['name']) ?>">
+                                 alt="<?= htmlspecialchars($featured_product['name']) ?>"
+                                 width="1000" height="1250" decoding="async" fetchpriority="high">
                         </a>
                         <div class="home-featured-note">
                             <small>اختيار مميز</small>
@@ -696,7 +698,8 @@ require_once __DIR__ . '/includes/header.php';
                         </div>
                     <?php else: ?>
                         <a class="home-hero-image-link" href="products.php">
-                            <img src="images/products/placeholder.svg" alt="تصفح منتجات Noor Handmade">
+                            <img src="images/products/placeholder.svg" alt="تصفح منتجات Noor Handmade"
+                                 width="1000" height="1250" decoding="async" fetchpriority="high">
                         </a>
                     <?php endif; ?>
                 </div>
@@ -728,7 +731,7 @@ require_once __DIR__ . '/includes/header.php';
                             <div class="home-category-image">
                                 <img src="images/categories/<?= htmlspecialchars($category['display_image']) ?>"
                                      alt="<?= htmlspecialchars($category['name']) ?>"
-                                     loading="lazy">
+                                     width="800" height="1000" loading="lazy" decoding="async">
                             </div>
                             <span class="home-category-name"><?= htmlspecialchars($category['name']) ?></span>
                         </a>
@@ -752,7 +755,7 @@ require_once __DIR__ . '/includes/header.php';
                             <div class="home-curated-image">
                                 <img src="images/products/<?= htmlspecialchars($product['display_image']) ?>"
                                      alt="<?= htmlspecialchars($product['name']) ?>"
-                                     loading="lazy">
+                                     width="800" height="1000" loading="lazy" decoding="async">
                             </div>
                             <div class="home-curated-meta">
                                 <h3><?= htmlspecialchars($product['name']) ?></h3>
@@ -779,7 +782,7 @@ require_once __DIR__ . '/includes/header.php';
                             <a class="home-product-image" href="product_details.php?slug=<?= htmlspecialchars($product['slug']) ?>">
                                 <img src="images/products/<?= htmlspecialchars($product['display_image']) ?>"
                                      alt="<?= htmlspecialchars($product['name']) ?>"
-                                     loading="lazy">
+                                     width="800" height="1000" loading="lazy" decoding="async">
                             </a>
                             <div class="home-product-info">
                                 <div class="home-product-category"><?= htmlspecialchars($product['category_name'] ?? '') ?></div>
@@ -809,9 +812,10 @@ require_once __DIR__ . '/includes/header.php';
                     <?php if ($featured_product): ?>
                         <img src="images/products/<?= htmlspecialchars($featured_product['display_image']) ?>"
                              alt="تفاصيل منتجات Noor Handmade"
-                             loading="lazy">
+                             width="800" height="1000" loading="lazy" decoding="async">
                     <?php else: ?>
-                        <img src="images/logo.jpeg" alt="Noor Handmade" loading="lazy">
+                        <img src="images/logo.jpeg" alt="Noor Handmade"
+                             width="800" height="1000" loading="lazy" decoding="async">
                     <?php endif; ?>
                 </div>
                 <div>

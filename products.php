@@ -107,13 +107,17 @@ if ($selected_category) {
 
 $page_title = $selected_category
     ? $selected_category['name'] . ' | Noor Handmade'
-    : 'كل المنتجات اليدوية | Noor Handmade';
+    : ($category_slug !== null ? 'القسم غير موجود | Noor Handmade' : 'كل المنتجات اليدوية | Noor Handmade');
 $page_description = $selected_category
     ? 'تصفح منتجات قسم ' . $selected_category['name'] . ' من Noor Handmade واختر من قطع يدوية مميزة مصنوعة بعناية.'
-    : 'تصفح جميع منتجات Noor Handmade اليدوية واكتشف قطعًا مميزة مصنوعة بعناية لتناسب ذوقك.';
+    : ($category_slug !== null
+        ? 'القسم الذي تبحث عنه غير موجود. تصفح أقسام ومنتجات Noor Handmade المتاحة.'
+        : 'تصفح جميع منتجات Noor Handmade اليدوية واكتشف قطعًا مميزة مصنوعة بعناية لتناسب ذوقك.');
 $page_canonical_path = 'products.php';
 if ($selected_category) {
     $page_canonical_path .= '?category=' . rawurlencode($selected_category['slug']);
+} elseif ($category_slug !== null) {
+    $page_canonical_path .= '?category=' . rawurlencode($category_slug);
 }
 
 $has_seo_filter = $min_price !== null || $max_price !== null || $sort_by !== 'newest';
@@ -123,6 +127,27 @@ if ($category_slug !== null && !$selected_category) {
     $page_robots = 'noindex, follow';
 } elseif ($current_page > 1) {
     $page_canonical_path .= ($selected_category ? '&' : '?') . 'page=' . $current_page;
+}
+
+require_once __DIR__ . '/includes/seo.php';
+$products_breadcrumb_items = [
+    ['name' => 'الرئيسية', 'url' => ''],
+    ['name' => 'المنتجات', 'url' => 'products.php'],
+];
+if ($selected_category) {
+    $products_breadcrumb_items[] = [
+        'name' => $selected_category['name'],
+        'url' => 'products.php?category=' . rawurlencode($selected_category['slug']),
+    ];
+}
+if ($current_page > 1 && !$has_seo_filter) {
+    $products_breadcrumb_items[] = [
+        'name' => 'صفحة ' . $current_page,
+        'url' => $page_canonical_path,
+    ];
+}
+if (!isset($page_robots) || stripos($page_robots, 'noindex') === false) {
+    $page_structured_data = [seo_breadcrumb_schema($products_breadcrumb_items)];
 }
 ?>
 
@@ -286,6 +311,31 @@ if ($category_slug !== null && !$selected_category) {
     }
 </style>
 <div class="container products-page">
+    <nav class="seo-breadcrumb" aria-label="مسار التنقل">
+        <ol>
+            <li><a href="index.php">الرئيسية</a></li>
+            <?php if ($selected_category): ?>
+                <li><a href="products.php">المنتجات</a></li>
+                <?php if ($current_page > 1 && !$has_seo_filter): ?>
+                    <li>
+                        <a href="products.php?category=<?= urlencode($selected_category['slug']) ?>">
+                            <?= htmlspecialchars($selected_category['name']) ?>
+                        </a>
+                    </li>
+                    <li aria-current="page">صفحة <?= $current_page ?></li>
+                <?php else: ?>
+                    <li aria-current="page"><?= htmlspecialchars($selected_category['name']) ?></li>
+                <?php endif; ?>
+            <?php else: ?>
+                <?php if ($current_page > 1 && !$has_seo_filter): ?>
+                    <li><a href="products.php">المنتجات</a></li>
+                    <li aria-current="page">صفحة <?= $current_page ?></li>
+                <?php else: ?>
+                    <li aria-current="page">المنتجات</li>
+                <?php endif; ?>
+            <?php endif; ?>
+        </ol>
+    </nav>
     <div class="row">
         <div class="col-lg-3">
     <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="filterSidebar"
@@ -371,8 +421,11 @@ if ($category_slug !== null && !$selected_category) {
 </div>
 
         <div class="col-lg-9">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2 class="mb-4"><?= htmlspecialchars($current_category_name) ?></h2>
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div class="mb-4">
+                    <h1 class="mb-1 fs-2"><?= htmlspecialchars($current_category_name) ?></h1>
+                    <p class="mb-0 text-muted"><?= htmlspecialchars($page_description) ?></p>
+                </div>
                 <button class="btn btn-mobile-filter d-lg-none mb-4" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#filterSidebar" aria-controls="filterSidebar">
                     ☰ تصفية المنتجات
@@ -413,13 +466,15 @@ if ($category_slug !== null && !$selected_category) {
                                                 <div class="swiper-slide">
                                                     <a href="product_details.php?slug=<?= htmlspecialchars($product['slug']) ?>"><img
                                                             src="images/products/<?= htmlspecialchars($image) ?>"
-                                                            alt="<?= htmlspecialchars($product['name']) ?>"></a>
+                                                            alt="<?= htmlspecialchars($product['name']) ?>"
+                                                            width="800" height="1000" loading="lazy" decoding="async"></a>
                                                 </div>
                                             <?php endforeach; else: ?>
                                             <div class="swiper-slide">
                                                 <a href="product_details.php?slug=<?= htmlspecialchars($product['slug']) ?>"><img
                                                         src="images/products/placeholder.svg"
-                                                        alt="<?= htmlspecialchars($product['name']) ?>"></a>
+                                                        alt="<?= htmlspecialchars($product['name']) ?>"
+                                                        width="800" height="1000" loading="lazy" decoding="async"></a>
                                             </div>
                                         <?php endif; ?>
                                     </div>
